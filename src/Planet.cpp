@@ -29,7 +29,7 @@ void Planet::cleanup() {
 void Planet::drawAll( const Ship& ship , sf::RenderTarget& target , sf::RenderStates states ) {
     for ( unsigned int index = 0 ; index < m_planets.size() ; index++ ) {
         // Realign shading with position of given ship's current position
-        m_planets[index]->shader.setParameter( "currentPos" , m_planets[index]->shape.getPosition().x - ship.shape.getPosition().x + target.getSize().x / 2.f , ship.shape.getPosition().y - m_planets[index]->shape.getPosition().y + target.getSize().y / 2.f + 2.f/* offset for shading */ );
+        m_planets[index]->shader.setParameter( "currentPos" , m_planets[index]->shape.getPosition().x - target.getView().getCenter().x + target.getSize().x / 2.f , target.getView().getCenter().y - m_planets[index]->shape.getPosition().y + target.getSize().y / 2.f + 2.f/* offset for shading */ );
 
         // Redraw planet
         target.draw( *m_planets[index] , m_planets[index]->m_shaderState );

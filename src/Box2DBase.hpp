@@ -8,6 +8,7 @@
 #define BOX2D_BASE_HPP
 
 #include <Box2D/Box2D.h>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Window.hpp>
@@ -42,6 +43,12 @@ public:
 
     b2Body* body;
     sf::Shape* drawShape;
+
+private:
+    std::vector<sf::CircleShape*> m_objectPath;
+
+    // Removes all dots from path drawing
+    void clearPath();
 };
 
 #endif // BOX2D_BASE_HPP
