@@ -16,8 +16,6 @@
 #include "Ship.hpp"
 #include "Planet.hpp"
 #include "ProgressBar.hpp"
-#include "GUI/Button.h"
-#include "GUI/GUISettings.h"
 
 int main() {
     sf::RenderWindow mainWin( sf::VideoMode::getDesktopMode()  , "Universal Gravitation Simulator" , sf::Style::Fullscreen | sf::Style::Resize | sf::Style::Close );
@@ -44,10 +42,6 @@ int main() {
 
     sf::RectangleShape HUDBackground( sf::Vector2f( mainWin.getSize().x , 45.f ) );
     HUDBackground.setFillColor( sf::Color( 90 , 90 , 90 , 170 ) );
-
-    Button resetButton( "Reset" , "Ctrl + N" , "" , -1 , 40 , []{
-
-    } );
 
     Ship myShip( sf::Vector2f( 400.f , 0.f ) , 100.f );
 
@@ -84,23 +78,6 @@ int main() {
                 if ( event.key.code == sf::Keyboard::Space ) {
                     isPaused = !isPaused;
                 }
-            }
-        }
-
-        // Handles all hotkeys that are assigned to buttons
-        for ( unsigned int index = 0 ; index < Button::allButtons.size() ; index++ ) {
-            if ( Button::allButtons[index]->hotKeyActivated( event ) ) {
-                if ( Button::allButtons[index]->func != NULL )
-                    Button::allButtons[index]->func();
-            }
-        }
-
-        // Change colors of all buttons when necessary
-        for ( unsigned int index = 0 ; index < Button::allButtons.size() ; index++ ) {
-            // If button color is wrong for current hover state, switch it to other color
-            if ( Button::allButtons[index]->isHovered( mainWin ) ^ ( Button::allButtons[index]->getFillColor().r == BUTTON_HOVER ) ) {
-                // "r" chosen is arbitrary since r, g, and b components are all equal
-                Button::allButtons[index]->setFillColor( Button::allButtons[index]->getFillColor().r ^ Button::colorXOR );
             }
         }
 
