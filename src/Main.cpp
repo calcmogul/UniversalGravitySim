@@ -8,14 +8,20 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Sleep.hpp>
+
 #include <cmath>
+#include <sstream>
 
 #include "Ship.hpp"
 #include "Planet.hpp"
 #include "ProgressBar.hpp"
+
+template <typename T>
+std::string numToStr( T num );
 
 int main() {
     sf::RenderWindow mainWin( sf::VideoMode::getDesktopMode()  , "Universal Gravitation Simulator" , sf::Style::Fullscreen | sf::Style::Resize | sf::Style::Close );
@@ -63,6 +69,15 @@ int main() {
 
     sf::View myView( mainWin.getView() );
 
+    sf::Text massPlanet( "" , UIFont::getInstance()->segoeUI() , 16.f );
+    massPlanet.setPosition( sf::Vector2f( 5.f , 5.f ) );
+
+    sf::Text massShip( "" , UIFont::getInstance()->segoeUI() , 16.f );
+    massShip.setPosition( sf::Vector2f( 5.f , massPlanet.getPosition().y + 16.f + 5.f ) );
+
+    sf::Text force( "" , UIFont::getInstance()->segoeUI() , 16.f );
+    force.setPosition( sf::Vector2f( 5.f , massShip.getPosition().y + 16.f + 5.f ) );
+
     while ( mainWin.isOpen() ) {
         while ( mainWin.pollEvent( event ) ) {
             if ( event.type == sf::Event::Closed ) {
@@ -81,6 +96,10 @@ int main() {
             }
         }
 
+        massPlanet.setString( "Planet mass = " + numToStr( Planet::getPlanet( 0 )->body->GetMass() ) + " kg" );
+        massShip.setString( "Ship mass   = " + numToStr( myShip.body->GetMass() ) + " kg" );
+        force.setString( "Force       = " + numToStr( Planet::getUnivGravity( Planet::getPlanet( 0 )->body , myShip.body ) ) + " N" );
+
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) ) {
             mainWin.close();
         }
@@ -94,8 +113,11 @@ int main() {
             Planet::syncObjects( mainWin );
 
             Planet::applyUnivGravity();
+
+            myShip.controlShip();
         }
 
+#if 0
         /* ===== Move view around according to arrow keys ===== */
         if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) ) {
             myView.move( -5.f , 0.f );
@@ -117,6 +139,7 @@ int main() {
             mainWin.setView( myView );
         }
         /* ==================================================== */
+#endif
 
         /* ===== Handle background texture shifting with ship ===== */
         // Move background left
@@ -150,12 +173,24 @@ int main() {
 
         mainWin.draw( HUDBackground );
 
+        mainWin.draw( massPlanet );
+        mainWin.draw( massShip );
+        mainWin.draw( force );
+
         mainWin.display();
 
-        //mainWin.setView( sf::View( sf::FloatRect( myShip.shape.getPosition().x - mainWin.getSize().x / 2 , myShip.shape.getPosition().y - mainWin.getSize().y / 2 , mainWin.getSize().x , mainWin.getSize().y ) ) );
+        mainWin.setView( sf::View( sf::FloatRect( myShip.shape.getPosition().x - mainWin.getSize().x / 2 , myShip.shape.getPosition().y - mainWin.getSize().y / 2 , mainWin.getSize().x , mainWin.getSize().y ) ) );
     }
 
     Planet::cleanup();
 
     return 0;
+}
+
+template <typename T>
+std::string numToStr( T num ) {
+    std::stringstream ss;
+
+    ss << num;
+    return ss.str();
 }

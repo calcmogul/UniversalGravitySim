@@ -54,7 +54,12 @@ void Box2DBase::syncObject( const sf::Window& referTo ) {
 
     m_objectPath.push_back( new sf::CircleShape( 1.f , 4 ) );
     m_objectPath.at( m_objectPath.size() - 1 )->setPosition( drawShape->getPosition() );
-    m_objectPath.at( m_objectPath.size() - 1 )->setFillColor( sf::Color( 255 , 0 , 0 ) );
+    m_objectPath.at( m_objectPath.size() - 1 )->setFillColor( sf::Color( 255 , 255 , 0 ) );
+
+    if ( m_objectPath.size() > 500 ) {
+        delete m_objectPath[0];
+        m_objectPath.erase( m_objectPath.begin() );
+    }
 }
 
 void Box2DBase::draw( sf::RenderTarget& target , sf::RenderStates states ) const {

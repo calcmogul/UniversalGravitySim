@@ -10,10 +10,10 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "Tyler Veness"
       VALUE "FileVersion", "1,0,0,0"
-      VALUE "InternalName", "Asteroids"
+      VALUE "InternalName", "UniversalGravitySim"
       VALUE "LegalCopyright", "None"
-      VALUE "OriginalFilename", "Asteroids.exe"
-      VALUE "ProductName", "Asteroids"
+      VALUE "OriginalFilename", "UniversalGravitySim.exe"
+      VALUE "ProductName", "UniversalGravitySim"
       VALUE "ProductVersion", "1.0"
     END
   END

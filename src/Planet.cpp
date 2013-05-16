@@ -6,6 +6,7 @@
 
 #include "Planet.hpp"
 #include "Ship.hpp"
+#include <cmath>
 
 std::vector<Planet*> Planet::m_planets;
 
@@ -62,6 +63,26 @@ void Planet::applyUnivGravity() {
             }
         }
     }
+}
+
+float Planet::getUnivGravity( b2Body* body1 , b2Body* body2 ) {
+    if ( body1 != body2 ) { // shouldn't apply universal gravitation on same body
+        b2Vec2 delta = body1->GetWorldCenter() - body2->GetWorldCenter();
+        float r = delta.Length();
+
+        float force = Constant::G * body1->GetMass() * body2->GetMass() / ( r * r );
+
+        delta.Normalize();
+
+        return std::hypot( (force * delta).x , (force * delta).y );
+    }
+    else {
+        return 0;
+    }
+}
+
+const Planet* Planet::getPlanet( size_t index ) {
+    return m_planets[index];
 }
 
 Planet::Planet( const sf::Vector2f& position , const float32& radius , const sf::Color& color ) : Box2DBase( &shape , position , b2_dynamicBody ) , shape( radius * 30.f ) {

@@ -25,7 +25,11 @@ public:
     static void syncObjects( const sf::Window& referTo );
 
     static void add( const sf::Vector2f& position , const float32& radius , const sf::Color& color );
+
     static void applyUnivGravity();
+    static float getUnivGravity( b2Body* body1 , b2Body* body2 );
+
+    static const Planet* getPlanet( size_t index );
 
     sf::CircleShape shape;
     sf::Shader shader;
