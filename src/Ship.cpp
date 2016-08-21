@@ -75,11 +75,11 @@ void Ship::controlShip() {
     }
 
     if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ) {
-        body->ApplyForceToCenter( b2Vec2( 7.5f * cos( body->GetAngle() + b2_pi / 2.f ) , 7.5f * sin( body->GetAngle() + b2_pi / 2 ) ) );
+        body->ApplyForceToCenter( b2Vec2( 7.5f * cos( body->GetAngle() + b2_pi / 2.f ) , 7.5f * sin( body->GetAngle() + b2_pi / 2 ) ) , true );
     }
 
     if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ) {
-        body->ApplyForceToCenter( b2Vec2( -7.5f * cos( body->GetAngle() + b2_pi / 2.f ) , -7.5f * sin( body->GetAngle() + b2_pi / 2 ) ) );
+        body->ApplyForceToCenter( b2Vec2( -7.5f * cos( body->GetAngle() + b2_pi / 2.f ) , -7.5f * sin( body->GetAngle() + b2_pi / 2 ) ) , true );
     }
 
     m_shipSpeed = body->GetLinearVelocity();

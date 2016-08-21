@@ -58,8 +58,8 @@ void Planet::applyUnivGravity() {
                 float force = Constant::G * moveBody->GetMass() * startBody->GetMass() / ( r * r );
 
                 delta.Normalize();
-                startBody->ApplyForceToCenter( -force * delta );
-                moveBody->ApplyForceToCenter( force * delta );
+                startBody->ApplyForceToCenter( -force * delta , true );
+                moveBody->ApplyForceToCenter( force * delta , true );
             }
         }
     }
