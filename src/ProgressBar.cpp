@@ -21,7 +21,7 @@ ProgressBar::ProgressBar(const sf::Vector2f& size, std::string message,
     sfText.setFont(UIFont::getInstance()->segoeUI());
     sfText.setCharacterSize(12);
     sfText.setString(message);
-    sfText.setColor(sf::Color(255, 255, 255));
+    sfText.setFillColor(sf::Color(255, 255, 255));
     sfText.setPosition(
         RectangleShape::getPosition().x,
         RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f);
@@ -33,8 +33,9 @@ ProgressBar::ProgressBar(const sf::Vector2f& size, std::string message,
                              sf::Shader::Fragment)) {
         std::exit(1);
     }
-    shader.setParameter("height", barFill.getSize().y);
-    shader.setParameter("color", fullFillColor);
+    shader.setUniform("height", barFill.getSize().y);
+    sf::Glsl::Vec4 fillColor{fullFillColor};
+    shader.setUniform("color", fillColor);
 
     shaderState.shader = &shader;
 }
@@ -75,7 +76,7 @@ void ProgressBar::setPosition(float x, float y) {
 void ProgressBar::setSize(const sf::Vector2f& size) {
     RectangleShape::setSize(size);
     barFill.setSize(sf::Vector2f((size.x - 2.f) * percent, size.y - 2.f));
-    shader.setParameter("height", barFill.getSize().y);
+    shader.setUniform("height", barFill.getSize().y);
 
     sfText.setPosition(
         RectangleShape::getPosition().x,
@@ -85,7 +86,7 @@ void ProgressBar::setSize(const sf::Vector2f& size) {
 void ProgressBar::setSize(float width, float height) {
     RectangleShape::setSize(sf::Vector2f(width, height));
     barFill.setSize(sf::Vector2f((width - 2.f) * percent, height - 2.f));
-    shader.setParameter("height", barFill.getSize().y);
+    shader.setUniform("height", barFill.getSize().y);
 
     sfText.setPosition(
         RectangleShape::getPosition().x,
