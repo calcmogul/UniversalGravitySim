@@ -8,34 +8,24 @@
 
 std::vector<Planet*> Planet::m_planets;
 
+static constexpr double kG = 6.6738480f;
+
 Planet::~Planet() {
-    std::vector<Planet*>::iterator index;
-    for (index = m_planets.begin(); *index != this; index++) {
-        if (index >= m_planets.end()) {
-            return;
-        }
-    }
-
-    m_planets.erase(index);
-}
-
-void Planet::cleanup() {
-    for (unsigned int index = m_planets.size(); index > 0; index--) {
-        delete m_planets[0];
-    }
+    m_planets.erase(std::remove(m_planets.begin(), m_planets.end(), this),
+                    m_planets.end());
 }
 
 void Planet::drawAll(const Ship& ship, sf::RenderTarget& target,
                      sf::RenderStates states) {
     for (unsigned int index = 0; index < m_planets.size(); index++) {
         // Realign shading with position of given ship's current position
-        m_planets[index]->shader.setParameter(
-            "currentPos",
-            m_planets[index]->shape.getPosition().x -
-                target.getView().getCenter().x + target.getSize().x / 2.f,
-            target.getView().getCenter().y -
+        sf::Glsl::Vec2 vec;
+        vec.x = m_planets[index]->shape.getPosition().x -
+                target.getView().getCenter().x + target.getSize().x / 2.f;
+        vec.y = target.getView().getCenter().y -
                 m_planets[index]->shape.getPosition().y +
-                target.getSize().y / 2.f + 2.f /* offset for shading */);
+                target.getSize().y / 2.f + 2.f /* offset for shading */;
+        m_planets[index]->shader.setUniform("currentPos", vec);
 
         // Redraw planet
         target.draw(*m_planets[index], m_planets[index]->m_shaderState);
@@ -65,8 +55,8 @@ void Planet::applyUnivGravity() {
                     startBody->GetWorldCenter() - moveBody->GetWorldCenter();
                 float r = delta.Length();
 
-                float force = Constant::G * moveBody->GetMass() *
-                              startBody->GetMass() / (r * r);
+                float force =
+                    kG * moveBody->GetMass() * startBody->GetMass() / (r * r);
 
                 delta.Normalize();
                 startBody->ApplyForceToCenter(-force * delta, true);
@@ -81,8 +71,7 @@ float Planet::getUnivGravity(b2Body* body1, b2Body* body2) {
         b2Vec2 delta = body1->GetWorldCenter() - body2->GetWorldCenter();
         float r = delta.Length();
 
-        float force =
-            Constant::G * body1->GetMass() * body2->GetMass() / (r * r);
+        float force = kG * body1->GetMass() * body2->GetMass() / (r * r);
 
         delta.Normalize();
 
@@ -117,9 +106,10 @@ Planet::Planet(const sf::Vector2f& position, const float32& radius,
                              sf::Shader::Fragment)) {
         std::exit(1);
     }
-    shader.setParameter("radius", shape.getRadius());
-    shader.setParameter("startFade", 7.f);
-    shader.setParameter("centerColor", shape.getFillColor());
+    shader.setUniform("radius", shape.getRadius());
+    shader.setUniform("startFade", 7.f);
+    sf::Glsl::Vec4 fillColor{shape.getFillColor()};
+    shader.setUniform("centerColor", fillColor);
 
     m_shaderState.shader = &shader;
 }

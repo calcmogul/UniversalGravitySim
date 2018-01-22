@@ -17,9 +17,6 @@ class Planet : public Box2DBase {
    public:
     virtual ~Planet();
 
-    // Call this at end of program to free all planets and avoid memory leaks
-    static void cleanup();
-
     static void drawAll(const Ship& ship, sf::RenderTarget& target,
                         sf::RenderStates states = sf::RenderStates::Default);
     static void syncObjects(const sf::Window& referTo);

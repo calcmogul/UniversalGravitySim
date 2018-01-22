@@ -11,10 +11,6 @@
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Window/Window.hpp>
 
-namespace Constant {
-static double G = 6.6738480f;
-}  // namespace Constant
-
 float BoxToSFML_x(float x);
 float BoxToSFML_y(float y, float boxHeight);
 

@@ -1,7 +1,7 @@
 // Copyright (c) 2016-2018 Tyler Veness. All Rights Reserved.
 
 #include <cmath>
-#include <sstream>
+#include <string>
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -15,9 +15,6 @@
 #include "Planet.hpp"
 #include "ProgressBar.hpp"
 #include "Ship.hpp"
-
-template <typename T>
-std::string numToStr(T num);
 
 int main() {
     sf::RenderWindow mainWin(
@@ -101,12 +98,12 @@ int main() {
         }
 
         massPlanet.setString(
-            "Planet mass = " + numToStr(Planet::getPlanet(0)->body->GetMass()) +
-            " kg");
-        massShip.setString("Ship mass   = " + numToStr(myShip.body->GetMass()) +
-                           " kg");
+            "Planet mass = " +
+            std::to_string(Planet::getPlanet(0)->body->GetMass()) + " kg");
+        massShip.setString(
+            "Ship mass   = " + std::to_string(myShip.body->GetMass()) + " kg");
         force.setString("Force       = " +
-                        numToStr(Planet::getUnivGravity(
+                        std::to_string(Planet::getUnivGravity(
                             Planet::getPlanet(0)->body, myShip.body)) +
                         " N");
 
@@ -186,16 +183,4 @@ int main() {
             myShip.shape.getPosition().y - mainWin.getSize().y / 2,
             mainWin.getSize().x, mainWin.getSize().y)));
     }
-
-    Planet::cleanup();
-
-    return 0;
-}
-
-template <typename T>
-std::string numToStr(T num) {
-    std::stringstream ss;
-
-    ss << num;
-    return ss.str();
 }
