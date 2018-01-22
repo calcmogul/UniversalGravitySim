@@ -69,14 +69,14 @@ int main() {
 
     sf::View myView(mainWin.getView());
 
-    sf::Text massPlanet("", UIFont::getInstance()->segoeUI(), 16.f);
+    sf::Text massPlanet("", UIFont::getInstance().segoeUI(), 16.f);
     massPlanet.setPosition(sf::Vector2f(5.f, 5.f));
 
-    sf::Text massShip("", UIFont::getInstance()->segoeUI(), 16.f);
+    sf::Text massShip("", UIFont::getInstance().segoeUI(), 16.f);
     massShip.setPosition(
         sf::Vector2f(5.f, massPlanet.getPosition().y + 16.f + 5.f));
 
-    sf::Text force("", UIFont::getInstance()->segoeUI(), 16.f);
+    sf::Text force("", UIFont::getInstance().segoeUI(), 16.f);
     force.setPosition(sf::Vector2f(5.f, massShip.getPosition().y + 16.f + 5.f));
 
     while (mainWin.isOpen()) {
