@@ -1,32 +1,28 @@
-//=============================================================================
-//File Name: UIFont.hpp
-//Description: Provides a collection of fonts for use by other classes
-//Author: Tyler Veness
-//=============================================================================
+// Copyright (c) 2018 Tyler Veness. All Rights Reserved.
 
-#ifndef UIFONT_HPP
-#define UIFONT_HPP
+#ifndef UNIVERSALGRAVITYSIM_SRC_UIFONT_HPP_
+#define UNIVERSALGRAVITYSIM_SRC_UIFONT_HPP_
 
 #include <SFML/Graphics/Font.hpp>
 
 class UIFont {
-public:
+   public:
     // @return a global instance of the resources available
     static UIFont* getInstance();
 
     sf::Font& segoeUI();
 
-protected:
+   protected:
     UIFont();
 
-private:
+   private:
     static UIFont* m_instance;
 
     static sf::Font m_segoeUI;
 
     // disallow copy and assignment
-    UIFont ( const UIFont& );
-    void operator=( const UIFont& );
+    UIFont(const UIFont&);
+    void operator=(const UIFont&);
 };
 
-#endif // UIFONT_HPP
+#endif  // UNIVERSALGRAVITYSIM_SRC_UIFONT_HPP_
