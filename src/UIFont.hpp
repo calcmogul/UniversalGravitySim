@@ -10,14 +10,7 @@ public:
     UIFont(const UIFont&) = delete;
     UIFont& operator=(const UIFont&) = delete;
 
-    static UIFont& getInstance();
-
-    sf::Font& segoeUI();
-
-private:
-    static sf::Font m_segoeUI;
-
-    UIFont();
+    static sf::Font& segoeUI();
 };
 
 #endif  // UNIVERSALGRAVITYSIM_SRC_UIFONT_HPP_
