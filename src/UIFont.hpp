@@ -6,16 +6,16 @@
 #include <SFML/Graphics/Font.hpp>
 
 class UIFont {
-   public:
+public:
     // @return a global instance of the resources available
     static UIFont* getInstance();
 
     sf::Font& segoeUI();
 
-   protected:
+protected:
     UIFont();
 
-   private:
+private:
     static UIFont* m_instance;
 
     static sf::Font m_segoeUI;

@@ -14,7 +14,7 @@
 class Ship;
 
 class Planet : public Box2DBase {
-   public:
+public:
     virtual ~Planet();
 
     static void drawAll(const Ship& ship, sf::RenderTarget& target,
@@ -32,7 +32,7 @@ class Planet : public Box2DBase {
     sf::CircleShape shape;
     sf::Shader shader;
 
-   private:
+private:
     Planet(const sf::Vector2f& position, const float32& radius,
            const sf::Color& color);
 

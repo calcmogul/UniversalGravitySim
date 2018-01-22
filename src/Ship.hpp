@@ -10,7 +10,7 @@
 #include "Box2DBase.hpp"
 
 class Ship : public Box2DBase {
-   public:
+public:
     Ship(const sf::Vector2f& position, float fullHealth);
     virtual ~Ship();
 
@@ -19,12 +19,12 @@ class Ship : public Box2DBase {
 
     sf::ConvexShape shape;
 
-   protected:
+protected:
     static sf::Texture m_shipTexture;
     static bool m_isLoaded;
     float m_health;
 
-   private:
+private:
     static float m_maxSpeed;
 
     b2Vec2 m_shipSpeed;
