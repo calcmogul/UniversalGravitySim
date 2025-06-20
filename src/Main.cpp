@@ -63,8 +63,6 @@ int main() {
 
   bool isPaused = false;
 
-  sf::View myView(mainWin.getView());
-
   sf::Text massPlanet(global_font(), "", 16.f);
   massPlanet.setPosition(sf::Vector2f(5.f, 5.f));
 
