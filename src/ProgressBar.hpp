@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) 2012-2025 Tyler Veness. All Rights Reserved.
 
 #ifndef UNIVERSALGRAVITYSIM_SRC_PROGRESSBAR_HPP_
 #define UNIVERSALGRAVITYSIM_SRC_PROGRESSBAR_HPP_
@@ -10,8 +10,6 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Shader.hpp>
 #include <SFML/Graphics/Text.hpp>
-
-#include "UIFont.hpp"
 
 class ProgressBar : public sf::RectangleShape {
 public:
@@ -32,7 +30,7 @@ public:
     const sf::String& getString();
 
     void setBarFillColor(const sf::Color& fill);
-    const sf::Color& getBarFillColor();
+    sf::Color getBarFillColor();
 
     sf::Shader shader;
 

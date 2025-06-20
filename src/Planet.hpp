@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) 2012-2025 Tyler Veness. All Rights Reserved.
 
 #ifndef UNIVERSALGRAVITYSIM_SRC_PLANET_HPP_
 #define UNIVERSALGRAVITYSIM_SRC_PLANET_HPP_
@@ -21,7 +21,7 @@ public:
                         sf::RenderStates states = sf::RenderStates::Default);
     static void syncObjects(const sf::Window& referTo);
 
-    static void add(const sf::Vector2f& position, const float32& radius,
+    static void add(const sf::Vector2f& position, const float& radius,
                     const sf::Color& color);
 
     static void applyUnivGravity();
@@ -33,7 +33,7 @@ public:
     sf::Shader shader;
 
 private:
-    Planet(const sf::Vector2f& position, const float32& radius,
+    Planet(const sf::Vector2f& position, const float& radius,
            const sf::Color& color);
 
     static std::vector<Planet*> m_planets;

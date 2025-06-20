@@ -1,15 +1,20 @@
-// Copyright (c) 2016-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) 2016-2025 Tyler Veness. All Rights Reserved.
 
 #include "ProgressBar.hpp"
 
+#include <string>
+
 #include <SFML/Graphics/RenderTarget.hpp>
+
+#include "globals.hpp"
 
 ProgressBar::ProgressBar(const sf::Vector2f& size, std::string message,
                          const sf::Color& fullFillColor,
                          const sf::Color& emptyFillColor,
                          const sf::Color& outlineColor, float percentFull)
     : sf::RectangleShape(size),
-      barFill(sf::Vector2f(size.x - 2.f, size.y - 2.f)) {
+      barFill(sf::Vector2f(size.x - 2.f, size.y - 2.f)),
+      sfText{global_font(), message, 12} {
     setFillColor(emptyFillColor);
     setOutlineThickness(1.f);
     setOutlineColor(outlineColor);
@@ -18,19 +23,16 @@ ProgressBar::ProgressBar(const sf::Vector2f& size, std::string message,
     barFill.setPosition(sf::Vector2f(RectangleShape::getPosition().x + 1.f,
                                      RectangleShape::getPosition().y + 1.f));
 
-    sfText.setFont(UIFont::segoeUI());
-    sfText.setCharacterSize(12);
-    sfText.setString(message);
     sfText.setFillColor(sf::Color(255, 255, 255));
     sfText.setPosition(
-        RectangleShape::getPosition().x,
-        RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f);
+        {RectangleShape::getPosition().x,
+         RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f});
 
     percent = percentFull;
 
     // Create the shader
-    if (!shader.loadFromFile("Resources/barGradient.frag",
-                             sf::Shader::Fragment)) {
+    if (!shader.loadFromFile("resources/barGradient.frag",
+                             sf::Shader::Type::Fragment)) {
         std::exit(1);
     }
     shader.setUniform("height", barFill.getSize().y);
@@ -41,7 +43,7 @@ ProgressBar::ProgressBar(const sf::Vector2f& size, std::string message,
 }
 
 void ProgressBar::draw(sf::RenderTarget& target,
-                       sf::RenderStates states) const {
+                       [[maybe_unused]] sf::RenderStates states) const {
     target.draw(static_cast<sf::RectangleShape>(*this));
     target.draw(barFill);
     // target.draw( barFill , shaderState );
@@ -59,18 +61,18 @@ float ProgressBar::getPercent() { return percent; }
 
 void ProgressBar::setPosition(const sf::Vector2f& position) {
     RectangleShape::setPosition(position);
-    barFill.setPosition(position.x + 1, position.y + 1);
+    barFill.setPosition({position.x + 1, position.y + 1});
     sfText.setPosition(
-        RectangleShape::getPosition().x,
-        RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f);
+        {RectangleShape::getPosition().x,
+         RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f});
 }
 
 void ProgressBar::setPosition(float x, float y) {
-    RectangleShape::setPosition(x, y);
-    barFill.setPosition(x + 1, y + 1);
+    RectangleShape::setPosition({x, y});
+    barFill.setPosition({x + 1, y + 1});
     sfText.setPosition(
-        RectangleShape::getPosition().x,
-        RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f);
+        {RectangleShape::getPosition().x,
+         RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f});
 }
 
 void ProgressBar::setSize(const sf::Vector2f& size) {
@@ -79,8 +81,8 @@ void ProgressBar::setSize(const sf::Vector2f& size) {
     shader.setUniform("height", barFill.getSize().y);
 
     sfText.setPosition(
-        RectangleShape::getPosition().x,
-        RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f);
+        {RectangleShape::getPosition().x,
+         RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f});
 }
 
 void ProgressBar::setSize(float width, float height) {
@@ -89,8 +91,8 @@ void ProgressBar::setSize(float width, float height) {
     shader.setUniform("height", barFill.getSize().y);
 
     sfText.setPosition(
-        RectangleShape::getPosition().x,
-        RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f);
+        {RectangleShape::getPosition().x,
+         RectangleShape::getPosition().y + RectangleShape::getSize().y + 2.f});
 }
 
 void ProgressBar::setString(const std::string& message) {
@@ -103,6 +105,4 @@ void ProgressBar::setBarFillColor(const sf::Color& fill) {
     barFill.setFillColor(fill);
 }
 
-const sf::Color& ProgressBar::getBarFillColor() {
-    return barFill.getFillColor();
-}
+sf::Color ProgressBar::getBarFillColor() { return barFill.getFillColor(); }

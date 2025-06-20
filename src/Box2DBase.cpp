@@ -1,6 +1,8 @@
-// Copyright (c) 2012-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) 2012-2025 Tyler Veness. All Rights Reserved.
 
 #include "Box2DBase.hpp"
+
+#include <SFML/System/Angle.hpp>
 
 float BoxToSFML_x(float x) { return x * 30.f; }
 
@@ -40,7 +42,7 @@ Box2DBase::~Box2DBase() {
 void Box2DBase::syncObject(const sf::Window& referTo) {
     drawShape->setPosition(BoxToSFML(
         body->GetPosition().x, body->GetPosition().y, referTo.getSize().y));
-    drawShape->setRotation(360.f - body->GetAngle() * 180.f / b2_pi);
+    drawShape->setRotation(sf::radians(-body->GetAngle()));
 
     m_objectPath.push_back(new sf::CircleShape(1.f, 4));
     m_objectPath.at(m_objectPath.size() - 1)

@@ -1,11 +1,12 @@
-// Copyright (c) 2012-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) 2012-2025 Tyler Veness. All Rights Reserved.
 
 #ifndef UNIVERSALGRAVITYSIM_SRC_BOX2DBASE_HPP_
 #define UNIVERSALGRAVITYSIM_SRC_BOX2DBASE_HPP_
 
+#include <box2d/box2d.h>
+
 #include <vector>
 
-#include <Box2D/Box2D.h>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Shape.hpp>

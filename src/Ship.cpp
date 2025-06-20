@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) 2016-2025 Tyler Veness. All Rights Reserved.
 
 #include "Ship.hpp"
 
@@ -12,7 +12,7 @@ Ship::Ship(const sf::Vector2f& position, float fullHealth)
     : Box2DBase(&shape, position, b2_dynamicBody), shape(6) {
     if (!m_isLoaded) {
         sf::Image shipImage;
-        if (!shipImage.loadFromFile("Resources/GalagaShip.png")) {
+        if (!shipImage.loadFromFile("resources/GalagaShip.png")) {
             std::exit(1);
         }
 
@@ -49,7 +49,7 @@ Ship::Ship(const sf::Vector2f& position, float fullHealth)
                                            m_shipTexture.getSize().y -
                                                shipVertices[index].y * 30.f));
     }
-    shape.setOrigin(0, m_shipTexture.getSize().y);
+    shape.setOrigin({0.f, static_cast<float>(m_shipTexture.getSize().y)});
 
     shape.setTexture(&m_shipTexture);
     /* ============================= */
@@ -58,11 +58,11 @@ Ship::Ship(const sf::Vector2f& position, float fullHealth)
 Ship::~Ship() {}
 
 void Ship::controlShip() {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
         body->SetAngularVelocity(body->GetAngularVelocity() + 0.1f);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
         body->SetAngularVelocity(body->GetAngularVelocity() - 0.1f);
     }
 
@@ -74,14 +74,14 @@ void Ship::controlShip() {
         body->SetTransform(body->GetPosition(), tempAngle + 2.f * b2_pi);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
         body->ApplyForceToCenter(
             b2Vec2(7.5f * std::cos(body->GetAngle() + b2_pi / 2.f),
                    7.5f * std::sin(body->GetAngle() + b2_pi / 2)),
             true);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
         body->ApplyForceToCenter(
             b2Vec2(-7.5f * std::cos(body->GetAngle() + b2_pi / 2.f),
                    -7.5f * std::sin(body->GetAngle() + b2_pi / 2)),
@@ -90,7 +90,7 @@ void Ship::controlShip() {
 
     m_shipSpeed = body->GetLinearVelocity();
     /*if ( m_shipSpeed.Length() > m_maxSpeed ) {
-        float32 angle = std::atan2( m_shipSpeed.y , m_shipSpeed.x );
+        float angle = std::atan2( m_shipSpeed.y , m_shipSpeed.x );
 
         body->SetLinearVelocity( b2Vec2( m_shipSpeed.x - ( m_shipSpeed.Length()
     - m_maxSpeed ) * std::cos( angle ) , m_shipSpeed.y - ( m_shipSpeed.Length()

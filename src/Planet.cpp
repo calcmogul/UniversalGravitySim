@@ -1,8 +1,9 @@
-// Copyright (c) 2016-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) 2016-2025 Tyler Veness. All Rights Reserved.
 
 #include "Planet.hpp"
 
 #include <cmath>
+#include <vector>
 
 #include "Ship.hpp"
 
@@ -15,8 +16,9 @@ Planet::~Planet() {
                     m_planets.end());
 }
 
-void Planet::drawAll(const Ship& ship, sf::RenderTarget& target,
-                     sf::RenderStates states) {
+void Planet::drawAll([[maybe_unused]] const Ship& ship,
+                     sf::RenderTarget& target,
+                     [[maybe_unused]] sf::RenderStates states) {
     for (unsigned int index = 0; index < m_planets.size(); index++) {
         // Realign shading with position of given ship's current position
         sf::Glsl::Vec2 vec;
@@ -38,16 +40,16 @@ void Planet::syncObjects(const sf::Window& referTo) {
     }
 }
 
-void Planet::add(const sf::Vector2f& position, const float32& radius,
+void Planet::add(const sf::Vector2f& position, const float& radius,
                  const sf::Color& color) {
     m_planets.push_back(new Planet(position, radius, color));
 }
 
 void Planet::applyUnivGravity() {
     // Applies universal gravitation to all combinations of bodies
-    for (b2Body* startBody = Box2DBase::world.GetBodyList(); startBody != NULL;
-         startBody = startBody->GetNext()) {
-        for (b2Body* moveBody = startBody->GetNext(); moveBody != NULL;
+    for (b2Body* startBody = Box2DBase::world.GetBodyList();
+         startBody != nullptr; startBody = startBody->GetNext()) {
+        for (b2Body* moveBody = startBody->GetNext(); moveBody != nullptr;
              moveBody = moveBody->GetNext()) {
             if (moveBody != startBody) {  // shouldn't apply universal
                                           // gravitation on same body
@@ -83,7 +85,7 @@ float Planet::getUnivGravity(b2Body* body1, b2Body* body2) {
 
 const Planet* Planet::getPlanet(size_t index) { return m_planets[index]; }
 
-Planet::Planet(const sf::Vector2f& position, const float32& radius,
+Planet::Planet(const sf::Vector2f& position, const float& radius,
                const sf::Color& color)
     : Box2DBase(&shape, position, b2_dynamicBody), shape(radius * 30.f) {
     b2CircleShape earthCircle;
@@ -98,12 +100,12 @@ Planet::Planet(const sf::Vector2f& position, const float32& radius,
 
     // Create SFML shape
     shape.setFillColor(color);
-    shape.setOrigin(shape.getRadius(), shape.getRadius());
+    shape.setOrigin({shape.getRadius(), shape.getRadius()});
     shape.setPosition(position);
 
     // Create the shader
-    if (!shader.loadFromFile("Resources/circleShade.frag",
-                             sf::Shader::Fragment)) {
+    if (!shader.loadFromFile("resources/circleShade.frag",
+                             sf::Shader::Type::Fragment)) {
         std::exit(1);
     }
     shader.setUniform("radius", shape.getRadius());
