@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2018 Tyler Veness. All Rights Reserved.
+// Copyright (c) Tyler Veness
 
 #ifndef UNIVERSALGRAVITYSIM_SRC_SHIP_HPP_
 #define UNIVERSALGRAVITYSIM_SRC_SHIP_HPP_
@@ -10,24 +10,24 @@
 #include "Box2DBase.hpp"
 
 class Ship : public Box2DBase {
-public:
-    Ship(const sf::Vector2f& position, float fullHealth);
-    virtual ~Ship();
+ public:
+  Ship(const sf::Vector2f& position, float fullHealth);
+  virtual ~Ship();
 
-    void controlShip();
-    float getHealth();
+  void controlShip();
+  float getHealth();
 
-    sf::ConvexShape shape;
+  sf::ConvexShape shape;
 
-protected:
-    static sf::Texture m_shipTexture;
-    static bool m_isLoaded;
-    float m_health;
+ protected:
+  static sf::Texture m_shipTexture;
+  static bool m_isLoaded;
+  float m_health;
 
-private:
-    static float m_maxSpeed;
+ private:
+  static float m_maxSpeed;
 
-    b2Vec2 m_shipSpeed;
+  b2Vec2 m_shipSpeed;
 };
 
 #endif  // UNIVERSALGRAVITYSIM_SRC_SHIP_HPP_

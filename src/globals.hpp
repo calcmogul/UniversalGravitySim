@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Tyler Veness. All Rights Reserved.
+// Copyright (c) Tyler Veness
 
 #pragma once
 
