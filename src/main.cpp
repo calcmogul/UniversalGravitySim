@@ -13,9 +13,9 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-#include "Planet.hpp"
-#include "Ship.hpp"
 #include "globals.hpp"
+#include "planet.hpp"
+#include "ship.hpp"
 
 int main() {
   sf::RenderWindow mainWin(sf::VideoMode::getDesktopMode(),

@@ -7,7 +7,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-#include "Box2DBase.hpp"
+#include "box2d_base.hpp"
 
 class Ship : public Box2DBase {
  public:

@@ -1,11 +1,11 @@
 // Copyright (c) Tyler Veness
 
-#include "Planet.hpp"
+#include "planet.hpp"
 
 #include <cmath>
 #include <vector>
 
-#include "Ship.hpp"
+#include "ship.hpp"
 
 std::vector<Planet*> Planet::m_planets;
 

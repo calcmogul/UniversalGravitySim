@@ -1,7 +1,7 @@
 // Copyright (c) Tyler Veness
 
-#ifndef UNIVERSALGRAVITYSIM_SRC_BOX2DBASE_HPP_
-#define UNIVERSALGRAVITYSIM_SRC_BOX2DBASE_HPP_
+#ifndef UNIVERSALGRAVITYSIM_SRC_BOX2D_BASE_HPP_
+#define UNIVERSALGRAVITYSIM_SRC_BOX2D_BASE_HPP_
 
 #include <box2d/box2d.h>
 
@@ -47,4 +47,4 @@ class Box2DBase : public sf::Drawable {
   void clearPath();
 };
 
-#endif  // UNIVERSALGRAVITYSIM_SRC_BOX2DBASE_HPP_
+#endif  // UNIVERSALGRAVITYSIM_SRC_BOX2D_BASE_HPP_

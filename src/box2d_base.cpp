@@ -1,6 +1,6 @@
 // Copyright (c) Tyler Veness
 
-#include "Box2DBase.hpp"
+#include "box2d_base.hpp"
 
 #include <SFML/System/Angle.hpp>
 
