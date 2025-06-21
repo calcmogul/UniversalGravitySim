@@ -1,7 +1,6 @@
 // Copyright (c) Tyler Veness
 
-#ifndef UNIVERSALGRAVITYSIM_SRC_PLANET_HPP_
-#define UNIVERSALGRAVITYSIM_SRC_PLANET_HPP_
+#pragma once
 
 #include <vector>
 
@@ -64,5 +63,3 @@ void main() {
 
   sf::RenderStates m_shaderState;
 };
-
-#endif  // UNIVERSALGRAVITYSIM_SRC_PLANET_HPP_

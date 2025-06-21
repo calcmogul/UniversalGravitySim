@@ -1,7 +1,6 @@
 // Copyright (c) Tyler Veness
 
-#ifndef UNIVERSALGRAVITYSIM_SRC_BOX2D_BASE_HPP_
-#define UNIVERSALGRAVITYSIM_SRC_BOX2D_BASE_HPP_
+#pragma once
 
 #include <box2d/box2d.h>
 
@@ -46,5 +45,3 @@ class Box2DBase : public sf::Drawable {
   // Removes all dots from path drawing
   void clearPath();
 };
-
-#endif  // UNIVERSALGRAVITYSIM_SRC_BOX2D_BASE_HPP_

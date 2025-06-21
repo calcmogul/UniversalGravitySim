@@ -1,7 +1,6 @@
 // Copyright (c) Tyler Veness
 
-#ifndef UNIVERSALGRAVITYSIM_SRC_SHIP_HPP_
-#define UNIVERSALGRAVITYSIM_SRC_SHIP_HPP_
+#pragma once
 
 #include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -29,5 +28,3 @@ class Ship : public Box2DBase {
 
   b2Vec2 m_shipSpeed;
 };
-
-#endif  // UNIVERSALGRAVITYSIM_SRC_SHIP_HPP_
