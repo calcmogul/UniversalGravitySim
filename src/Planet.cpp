@@ -98,18 +98,11 @@ Planet::Planet(const sf::Vector2f& position, const float& radius,
 
   body->SetAngularVelocity(20.f);
 
-  // Create SFML shape
   shape.setFillColor(color);
   shape.setOrigin({shape.getRadius(), shape.getRadius()});
   shape.setPosition(position);
 
-  // Create the shader
-  if (!shader.loadFromFile("resources/circleShade.frag",
-                           sf::Shader::Type::Fragment)) {
-    std::exit(1);
-  }
   shader.setUniform("radius", shape.getRadius());
-  shader.setUniform("startFade", 7.f);
   sf::Glsl::Vec4 fillColor{shape.getFillColor()};
   shader.setUniform("centerColor", fillColor);
 
