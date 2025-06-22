@@ -45,14 +45,9 @@ int main() {
 
   bool is_paused = false;
 
-  sf::Text mass_planet(global_font(), "", 16.f);
-  mass_planet.setPosition({5.f, 5.f});
-
-  sf::Text mass_ship(global_font(), "", 16.f);
-  mass_ship.setPosition({5.f, mass_planet.getPosition().y + 16.f + 5.f});
-
-  sf::Text force(global_font(), "", 16.f);
-  force.setPosition({5.f, mass_ship.getPosition().y + 16.f + 5.f});
+  sf::Text mass_planet{global_font(), "", 16};
+  sf::Text mass_ship{global_font(), "", 16};
+  sf::Text force{global_font(), "", 16};
 
   while (main_window.isOpen()) {
     while (auto event = main_window.pollEvent()) {
@@ -72,11 +67,15 @@ int main() {
 
     mass_planet.setString(std::format("Planet mass = {} kg",
                                       Planet::getPlanet(0)->body->GetMass()));
-    mass_ship.setString(
-        std::format("Ship mass   = {} kg", ship.body->GetMass()));
+    mass_planet.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f});
+
+    mass_ship.setString(std::format("Ship mass = {} kg", ship.body->GetMass()));
+    mass_ship.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f + 18.f});
+
     force.setString(std::format(
-        "Force       = {} N",
+        "Force = {} N",
         Planet::getUnivGravity(Planet::getPlanet(0)->body, ship.body)));
+    force.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f + 36.f});
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
       main_window.close();
