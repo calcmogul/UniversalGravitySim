@@ -1,6 +1,6 @@
 // Copyright (c) Tyler Veness
 
-#include <string>
+#include <format>
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Graphics/Image.hpp>
@@ -9,7 +9,6 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <SFML/System/Sleep.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
@@ -18,155 +17,148 @@
 #include "ship.hpp"
 
 int main() {
-  sf::RenderWindow mainWin(sf::VideoMode::getDesktopMode(),
-                           "Universal Gravitation Simulator",
-                           sf::Style::Resize | sf::Style::Close);
-  mainWin.setMouseCursorVisible(false);
-  mainWin.setVerticalSyncEnabled(true);
+  constexpr float FRAME_RATE = 60.f;
 
-  sf::Image appIcon{"resources/GalagaShip.png"};
-  mainWin.setIcon(appIcon);
+  sf::RenderWindow main_window(sf::VideoMode::getDesktopMode(),
+                               "Universal Gravitation Simulator",
+                               sf::Style::Resize | sf::Style::Close);
+  main_window.setMouseCursorVisible(false);
+  main_window.setFramerateLimit(FRAME_RATE);
 
-  sf::Texture backgroundTexture;
+  main_window.setIcon(sf::Image{"resources/GalagaShip.png"});
 
-  if (!backgroundTexture.loadFromFile("resources/SpaceBackground.png")) {
-    std::exit(1);
-  }
+  sf::Texture background_texture{"resources/SpaceBackground.png"};
+  background_texture.setRepeated(true);
 
-  backgroundTexture.setRepeated(true);  // Tiling background
+  sf::Sprite background_sprite{background_texture};
+  background_sprite.setTextureRect(
+      sf::IntRect{{-86, -86},
+                  {static_cast<int>(main_window.getSize().x + 2 * 86),
+                   static_cast<int>(main_window.getSize().y + 2 * 86)}});
+  background_sprite.setPosition({0.f, 0.f});
 
-  sf::Sprite backgroundSprite(backgroundTexture);
-  backgroundSprite.setTextureRect(sf::IntRect(
-      {-86, -86}, {static_cast<int>(mainWin.getSize().x + 2 * 86),
-                   static_cast<int>(mainWin.getSize().y + 2 * 86)}));
-  backgroundSprite.setPosition({0.f, 0.f});
+  sf::RectangleShape hud_background{
+      {static_cast<float>(main_window.getSize().x), 45.f}};
+  hud_background.setFillColor({90, 90, 90, 170});
 
-  sf::RectangleShape HUDBackground(sf::Vector2f(mainWin.getSize().x, 45.f));
-  HUDBackground.setFillColor(sf::Color(90, 90, 90, 170));
+  Ship ship{{400.f, 0.f}, 100.f};
 
-  Ship myShip(sf::Vector2f(400.f, 0.f), 100.f);
+  Planet::add({0.f, 0.f}, 140.f / 30.f, sf::Color{0, 128, 0});
 
-  Planet::add(sf::Vector2f(0.f, 0.f), 140.f / 30.f, sf::Color(0, 128, 0));
+  main_window.setView(
+      sf::View{sf::FloatRect{{0.f, 0.f}, sf::Vector2f{main_window.getSize()}}});
 
-  // Prepare for simulation. Typically we use a time step of 1/60 of a
-  // second (60Hz) and 10 iterations. This provides a high quality simulation
-  // in most game scenarios.
-  float timeStep = 1.0f / 60.0f;
-  int32 velocityIterations = 1;  // 6
-  int32 positionIterations = 1;  // 2
+  bool is_paused = false;
 
-  mainWin.setView(
-      sf::View(sf::FloatRect({0.f, 0.f}, sf::Vector2f{mainWin.getSize()})));
+  sf::Text mass_planet(global_font(), "", 16.f);
+  mass_planet.setPosition({5.f, 5.f});
 
-  bool isPaused = false;
-
-  sf::Text massPlanet(global_font(), "", 16.f);
-  massPlanet.setPosition(sf::Vector2f(5.f, 5.f));
-
-  sf::Text massShip(global_font(), "", 16.f);
-  massShip.setPosition(
-      sf::Vector2f(5.f, massPlanet.getPosition().y + 16.f + 5.f));
+  sf::Text mass_ship(global_font(), "", 16.f);
+  mass_ship.setPosition({5.f, mass_planet.getPosition().y + 16.f + 5.f});
 
   sf::Text force(global_font(), "", 16.f);
-  force.setPosition(sf::Vector2f(5.f, massShip.getPosition().y + 16.f + 5.f));
+  force.setPosition({5.f, mass_ship.getPosition().y + 16.f + 5.f});
 
-  while (mainWin.isOpen()) {
-    while (auto event = mainWin.pollEvent()) {
+  while (main_window.isOpen()) {
+    while (auto event = main_window.pollEvent()) {
       if (event->is<sf::Event::Closed>()) {
-        mainWin.close();
+        main_window.close();
       } else if (event->is<sf::Event::Resized>()) {
-        backgroundSprite.setTextureRect(sf::IntRect(
-            {-86, -86}, {static_cast<int>(mainWin.getSize().x + 2.f * 86.f),
-                         static_cast<int>(mainWin.getSize().y + 2.f * 86.f)}));
+        background_sprite.setTextureRect(sf::IntRect{
+            {-86, -86},
+            {static_cast<int>(main_window.getSize().x + 2.f * 86.f),
+             static_cast<int>(main_window.getSize().y + 2.f * 86.f)}});
 
-        HUDBackground.setScale(
-            {mainWin.getSize().x / 50.f, HUDBackground.getScale().y});
+        hud_background.setScale(
+            {main_window.getSize().x / 50.f, hud_background.getScale().y});
       } else if (auto key_event = event->getIf<sf::Event::KeyReleased>()) {
         if (key_event->code == sf::Keyboard::Key::Space) {
-          isPaused = !isPaused;
+          is_paused = !is_paused;
         }
       }
     }
 
-    massPlanet.setString("Planet mass = " +
-                         std::to_string(Planet::getPlanet(0)->body->GetMass()) +
-                         " kg");
-    massShip.setString(
-        "Ship mass   = " + std::to_string(myShip.body->GetMass()) + " kg");
-    force.setString("Force       = " +
-                    std::to_string(Planet::getUnivGravity(
-                        Planet::getPlanet(0)->body, myShip.body)) +
-                    " N");
+    mass_planet.setString(std::format("Planet mass = {} kg",
+                                      Planet::getPlanet(0)->body->GetMass()));
+    mass_ship.setString(
+        std::format("Ship mass   = {} kg", ship.body->GetMass()));
+    force.setString(std::format(
+        "Force       = {} N",
+        Planet::getUnivGravity(Planet::getPlanet(0)->body, ship.body)));
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-      mainWin.close();
+      main_window.close();
     }
 
-    if (!isPaused) {
+    if (!is_paused) {
       // Instruct the world to perform a single step of simulation.
       // It is generally best to keep the time step and iterations fixed.
-      Box2DBase::world.Step(timeStep, velocityIterations, positionIterations);
+      Box2DBase::world.Step(1.f / FRAME_RATE, 1, 1);
 
-      myShip.syncObject(mainWin);
-      Planet::syncObjects(mainWin);
+      ship.syncObject(main_window);
+      Planet::syncObjects(main_window);
 
       Planet::applyUnivGravity();
 
-      myShip.control();
+      ship.control();
     }
 
     /* ===== Handle background texture shifting with ship ===== */
     // Move background left
-    if (mainWin.getView().getCenter().x - backgroundSprite.getPosition().x <
-        mainWin.getSize().x / 2 + 86.f) {
-      backgroundSprite.setPosition({backgroundSprite.getPosition().x - 86.f,
-                                    backgroundSprite.getPosition().y});
+    if (main_window.getView().getCenter().x -
+            background_sprite.getPosition().x <
+        main_window.getSize().x / 2.f + 86.f) {
+      background_sprite.setPosition({background_sprite.getPosition().x - 86.f,
+                                     background_sprite.getPosition().y});
     }
 
     // Move background right
-    if (mainWin.getView().getCenter().x - backgroundSprite.getPosition().x >
-        mainWin.getSize().x / 2 + 86.f) {
-      backgroundSprite.setPosition({backgroundSprite.getPosition().x + 86.f,
-                                    backgroundSprite.getPosition().y});
+    if (main_window.getView().getCenter().x -
+            background_sprite.getPosition().x >
+        main_window.getSize().x / 2.f + 86.f) {
+      background_sprite.setPosition({background_sprite.getPosition().x + 86.f,
+                                     background_sprite.getPosition().y});
     }
 
     // Move background up
-    if (mainWin.getView().getCenter().y - backgroundSprite.getPosition().y <
-        mainWin.getSize().y / 2 + 86.f) {
-      backgroundSprite.setPosition({backgroundSprite.getPosition().x,
-                                    backgroundSprite.getPosition().y - 86.f});
+    if (main_window.getView().getCenter().y -
+            background_sprite.getPosition().y <
+        main_window.getSize().y / 2.f + 86.f) {
+      background_sprite.setPosition({background_sprite.getPosition().x,
+                                     background_sprite.getPosition().y - 86.f});
     }
 
     // Move background down
-    if (mainWin.getView().getCenter().y - backgroundSprite.getPosition().y >
-        mainWin.getSize().y / 2 + 86.f) {
-      backgroundSprite.setPosition({backgroundSprite.getPosition().x,
-                                    backgroundSprite.getPosition().y + 86.f});
+    if (main_window.getView().getCenter().y -
+            background_sprite.getPosition().y >
+        main_window.getSize().y / 2.f + 86.f) {
+      background_sprite.setPosition({background_sprite.getPosition().x,
+                                     background_sprite.getPosition().y + 86.f});
     }
     /* ======================================================== */
 
-    HUDBackground.setPosition(
-        {mainWin.getView().getCenter().x - mainWin.getSize().x / 2.f,
-         mainWin.getView().getCenter().y + mainWin.getSize().y / 2.f -
-             HUDBackground.getSize().y});
+    hud_background.setPosition(
+        {main_window.getView().getCenter().x - main_window.getSize().x / 2.f,
+         main_window.getView().getCenter().y + main_window.getSize().y / 2.f -
+             hud_background.getSize().y});
 
-    mainWin.clear(sf::Color(10, 10, 10));
+    main_window.clear({10, 10, 10});
 
-    mainWin.draw(backgroundSprite);
-    Planet::drawAll(myShip, mainWin);
-    mainWin.draw(myShip);
+    main_window.draw(background_sprite);
+    Planet::drawAll(ship, main_window);
+    main_window.draw(ship);
 
-    mainWin.draw(HUDBackground);
+    main_window.draw(hud_background);
 
-    mainWin.draw(massPlanet);
-    mainWin.draw(massShip);
-    mainWin.draw(force);
+    main_window.draw(mass_planet);
+    main_window.draw(mass_ship);
+    main_window.draw(force);
 
-    mainWin.display();
+    main_window.display();
 
-    mainWin.setView(sf::View(
-        sf::FloatRect({myShip.get_position().x - mainWin.getSize().x / 2,
-                       myShip.get_position().y - mainWin.getSize().y / 2},
-                      sf::Vector2f{mainWin.getSize()})));
+    main_window.setView(sf::View{
+        sf::FloatRect{{ship.get_position().x - main_window.getSize().x / 2.f,
+                       ship.get_position().y - main_window.getSize().y / 2.f},
+                      sf::Vector2f{main_window.getSize()}}});
   }
 }
