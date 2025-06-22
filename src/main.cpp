@@ -96,9 +96,9 @@ int main() {
       // It is generally best to keep the time step and iterations fixed.
       Box2DBase::world.Step(1.f / FRAME_RATE, 1, 1);
 
-      ship.syncObject(main_window);
+      ship.sync_object(main_window);
       for (auto& planet : planets) {
-        planet.syncObject(main_window);
+        planet.sync_object(main_window);
       }
 
       // Applies universal gravitation to all combinations of bodies
