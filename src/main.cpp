@@ -77,14 +77,11 @@ int main() {
     mass_ship.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f + 18.f});
 
     // Shouldn't apply universal gravitation on same body
-    b2Vec2 delta =
-        planets[0].body->GetWorldCenter() - ship.body->GetWorldCenter();
-    float r = delta.Length();
-
-    delta.Normalize();
     force.setString(std::format(
         "Force = {} N",
-        G * planets[0].body->GetMass() * ship.body->GetMass() / (r * r)));
+        G * planets[0].body->GetMass() * ship.body->GetMass() /
+            (planets[0].body->GetWorldCenter() - ship.body->GetWorldCenter())
+                .LengthSquared()));
     force.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f + 36.f});
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
@@ -102,22 +99,20 @@ int main() {
       }
 
       // Applies universal gravitation to all combinations of bodies
-      for (b2Body* startBody = Box2DBase::world.GetBodyList();
-           startBody != nullptr; startBody = startBody->GetNext()) {
-        for (b2Body* moveBody = startBody->GetNext(); moveBody != nullptr;
-             moveBody = moveBody->GetNext()) {
+      for (b2Body* start_body = Box2DBase::world.GetBodyList();
+           start_body != nullptr; start_body = start_body->GetNext()) {
+        for (b2Body* move_body = start_body->GetNext(); move_body != nullptr;
+             move_body = move_body->GetNext()) {
           // Shouldn't apply universal gravitation on same body
-          if (moveBody != startBody) {
+          if (move_body != start_body) {
             b2Vec2 delta =
-                startBody->GetWorldCenter() - moveBody->GetWorldCenter();
-            float r = delta.Length();
-
-            float force =
-                G * moveBody->GetMass() * startBody->GetMass() / (r * r);
+                start_body->GetWorldCenter() - move_body->GetWorldCenter();
+            float force = G * move_body->GetMass() * start_body->GetMass() /
+                          delta.LengthSquared();
 
             delta.Normalize();
-            startBody->ApplyForceToCenter(-force * delta, true);
-            moveBody->ApplyForceToCenter(force * delta, true);
+            start_body->ApplyForceToCenter(-force * delta, true);
+            move_body->ApplyForceToCenter(force * delta, true);
           }
         }
       }
