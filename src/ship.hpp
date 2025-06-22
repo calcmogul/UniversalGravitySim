@@ -3,28 +3,24 @@
 #pragma once
 
 #include <SFML/Graphics/ConvexShape.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Window/Keyboard.hpp>
 
 #include "box2d_base.hpp"
 
 class Ship : public Box2DBase {
  public:
-  Ship(const sf::Vector2f& position, float fullHealth);
-  virtual ~Ship();
+  Ship(const sf::Vector2f& position, float health);
 
-  void controlShip();
-  float getHealth();
+  virtual ~Ship() = default;
 
-  sf::ConvexShape shape;
+  void control();
 
- protected:
-  static sf::Texture m_shipTexture;
-  static bool m_isLoaded;
-  float m_health;
+  sf::Vector2f get_position() const { return shape.getPosition(); }
+
+  float get_health() const { return health; }
 
  private:
-  static float m_maxSpeed;
+  static constexpr float MAX_SPEED = 10.f;
 
-  b2Vec2 m_shipSpeed;
+  float health;
+  sf::ConvexShape shape{6};
 };

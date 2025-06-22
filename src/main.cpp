@@ -57,9 +57,6 @@ int main() {
 
   mainWin.setView(
       sf::View(sf::FloatRect({0.f, 0.f}, sf::Vector2f{mainWin.getSize()})));
-  // mainWin.setView( sf::View( sf::FloatRect( 0.f - mainWin.getSize().x / 2.f
-  // , 0.f - mainWin.getSize().y / 1.f , mainWin.getSize().x ,
-  // mainWin.getSize().y ) ) );
 
   bool isPaused = false;
 
@@ -115,7 +112,7 @@ int main() {
 
       Planet::applyUnivGravity();
 
-      myShip.controlShip();
+      myShip.control();
     }
 
     /* ===== Handle background texture shifting with ship ===== */
@@ -168,8 +165,8 @@ int main() {
     mainWin.display();
 
     mainWin.setView(sf::View(
-        sf::FloatRect({myShip.shape.getPosition().x - mainWin.getSize().x / 2,
-                       myShip.shape.getPosition().y - mainWin.getSize().y / 2},
+        sf::FloatRect({myShip.get_position().x - mainWin.getSize().x / 2,
+                       myShip.get_position().y - mainWin.getSize().y / 2},
                       sf::Vector2f{mainWin.getSize()})));
   }
 }
