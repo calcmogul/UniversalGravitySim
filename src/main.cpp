@@ -4,7 +4,6 @@
 
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Graphics/Image.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -37,10 +36,6 @@ int main() {
                    static_cast<int>(main_window.getSize().y + 2 * 86)}});
   background_sprite.setPosition({0.f, 0.f});
 
-  sf::RectangleShape hud_background{
-      {static_cast<float>(main_window.getSize().x), 45.f}};
-  hud_background.setFillColor({90, 90, 90, 170});
-
   Ship ship{{400.f, 0.f}, 100.f};
 
   Planet::add({0.f, 0.f}, 140.f / 30.f, sf::Color{0, 128, 0});
@@ -68,9 +63,6 @@ int main() {
             {-86, -86},
             {static_cast<int>(main_window.getSize().x + 2.f * 86.f),
              static_cast<int>(main_window.getSize().y + 2.f * 86.f)}});
-
-        hud_background.setScale(
-            {main_window.getSize().x / 50.f, hud_background.getScale().y});
       } else if (auto key_event = event->getIf<sf::Event::KeyReleased>()) {
         if (key_event->code == sf::Keyboard::Key::Space) {
           is_paused = !is_paused;
@@ -137,18 +129,11 @@ int main() {
     }
     /* ======================================================== */
 
-    hud_background.setPosition(
-        {main_window.getView().getCenter().x - main_window.getSize().x / 2.f,
-         main_window.getView().getCenter().y + main_window.getSize().y / 2.f -
-             hud_background.getSize().y});
-
     main_window.clear({10, 10, 10});
 
     main_window.draw(background_sprite);
     Planet::drawAll(ship, main_window);
     main_window.draw(ship);
-
-    main_window.draw(hud_background);
 
     main_window.draw(mass_planet);
     main_window.draw(mass_ship);
