@@ -1,6 +1,7 @@
 // Copyright (c) Tyler Veness
 
 #include <format>
+#include <vector>
 
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -13,6 +14,8 @@
 #include "globals.hpp"
 #include "planet.hpp"
 #include "ship.hpp"
+
+static constexpr double G = 6.6738480f;
 
 int main() {
   constexpr float FRAME_RATE = 60.f;
@@ -37,7 +40,9 @@ int main() {
 
   Ship ship{{400.f, 0.f}, 100.f};
 
-  Planet::add({0.f, 0.f}, 140.f / 30.f, sf::Color{0, 128, 0});
+  std::vector<Planet> planets;
+  planets.emplace_back(sf::Vector2f{0.f, 0.f}, 140.f / 30.f,
+                       sf::Color{0, 128, 0});
 
   main_window.setView(
       sf::View{sf::FloatRect{{0.f, 0.f}, sf::Vector2f{main_window.getSize()}}});
@@ -64,16 +69,22 @@ int main() {
       }
     }
 
-    mass_planet.setString(std::format("Planet mass = {} kg",
-                                      Planet::getPlanet(0)->body->GetMass()));
+    mass_planet.setString(
+        std::format("Planet mass = {} kg", planets[0].body->GetMass()));
     mass_planet.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f});
 
     mass_ship.setString(std::format("Ship mass = {} kg", ship.body->GetMass()));
     mass_ship.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f + 18.f});
 
+    // Shouldn't apply universal gravitation on same body
+    b2Vec2 delta =
+        planets[0].body->GetWorldCenter() - ship.body->GetWorldCenter();
+    float r = delta.Length();
+
+    delta.Normalize();
     force.setString(std::format(
         "Force = {} N",
-        Planet::getUnivGravity(Planet::getPlanet(0)->body, ship.body)));
+        G * planets[0].body->GetMass() * ship.body->GetMass() / (r * r)));
     force.setPosition(ship.get_position() + sf::Vector2f{5.f, 50.f + 36.f});
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
@@ -86,9 +97,30 @@ int main() {
       Box2DBase::world.Step(1.f / FRAME_RATE, 1, 1);
 
       ship.syncObject(main_window);
-      Planet::syncObjects(main_window);
+      for (auto& planet : planets) {
+        planet.syncObject(main_window);
+      }
 
-      Planet::applyUnivGravity();
+      // Applies universal gravitation to all combinations of bodies
+      for (b2Body* startBody = Box2DBase::world.GetBodyList();
+           startBody != nullptr; startBody = startBody->GetNext()) {
+        for (b2Body* moveBody = startBody->GetNext(); moveBody != nullptr;
+             moveBody = moveBody->GetNext()) {
+          // Shouldn't apply universal gravitation on same body
+          if (moveBody != startBody) {
+            b2Vec2 delta =
+                startBody->GetWorldCenter() - moveBody->GetWorldCenter();
+            float r = delta.Length();
+
+            float force =
+                G * moveBody->GetMass() * startBody->GetMass() / (r * r);
+
+            delta.Normalize();
+            startBody->ApplyForceToCenter(-force * delta, true);
+            moveBody->ApplyForceToCenter(force * delta, true);
+          }
+        }
+      }
 
       ship.control();
     }
@@ -130,7 +162,9 @@ int main() {
     main_window.clear({10, 10, 10});
 
     main_window.draw(background_sprite);
-    Planet::drawAll(ship, main_window);
+    for (auto& planet : planets) {
+      planet.draw_on(main_window);
+    }
     main_window.draw(ship);
 
     main_window.draw(mass_planet);

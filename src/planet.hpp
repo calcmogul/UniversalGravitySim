@@ -2,31 +2,22 @@
 
 #pragma once
 
-#include <vector>
-
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Shader.hpp>
 
 #include "box2d_base.hpp"
 
-class Ship;
-
 class Planet : public Box2DBase {
  public:
-  virtual ~Planet();
+  Planet(const sf::Vector2f& position, float radius, const sf::Color& color);
 
-  static void drawAll(const Ship& ship, sf::RenderTarget& target,
-                      sf::RenderStates states = sf::RenderStates::Default);
-  static void syncObjects(const sf::Window& referTo);
+  virtual ~Planet() = default;
 
-  static void add(const sf::Vector2f& position, const float& radius,
-                  const sf::Color& color);
+  Planet(Planet&&) = default;
+  Planet& operator=(Planet&&) = default;
 
-  static void applyUnivGravity();
-  static float getUnivGravity(b2Body* body1, b2Body* body2);
-
-  static const Planet* getPlanet(size_t index);
+  void draw_on(sf::RenderTarget& target);
 
   sf::CircleShape shape;
   sf::Shader shader{std::string_view{R"(
@@ -35,31 +26,26 @@ class Planet : public Box2DBase {
 // radius must be greater than 7
 
 uniform float radius;
-uniform vec2 currentPos;
-uniform vec4 centerColor;
+uniform vec2 current_pos;
+uniform vec4 center_color;
 
-const float startFade = 7.0;
+const float START_FADE = 7.0;
 
 void main() {
-  gl_FragColor = centerColor;
+  gl_FragColor = center_color;
 
-  float distance = distance(gl_FragCoord.xy, currentPos.xy);
+  float distance = distance(gl_FragCoord.xy, current_pos.xy);
 
   if (distance >= radius) {
     gl_FragColor = vec4(0.0, 0.0, 0.0, gl_FragColor.a);
-  } else if (distance > startFade) {
+  } else if (distance > START_FADE) {
     // if outside of range, start gradienting color to black
-    float factor = (1.0 - (distance - startFade) / (radius - startFade));
+    float factor = (1.0 - (distance - START_FADE) / (radius - START_FADE));
     gl_FragColor = vec4(factor * vec3(gl_FragColor), gl_FragColor.a);
   }
 })"},
                     sf::Shader::Type::Fragment};
 
  private:
-  Planet(const sf::Vector2f& position, const float& radius,
-         const sf::Color& color);
-
-  static std::vector<Planet*> m_planets;
-
-  sf::RenderStates m_shaderState;
+  sf::RenderStates m_shader_state;
 };
