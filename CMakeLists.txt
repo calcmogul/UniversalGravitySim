@@ -31,7 +31,7 @@ target_include_directories(UniversalGravitySim PRIVATE src)
 
 include(FetchContent)
 
-fetchcontent_declare(
+FetchContent_Declare(
     SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 3.0.1
@@ -39,10 +39,10 @@ fetchcontent_declare(
     EXCLUDE_FROM_ALL
     SYSTEM
 )
-fetchcontent_makeavailable(SFML)
+FetchContent_MakeAvailable(SFML)
 target_link_libraries(UniversalGravitySim PUBLIC SFML::Graphics)
 
-fetchcontent_declare(
+FetchContent_Declare(
     box2d
     GIT_REPOSITORY https://github.com/erincatto/box2d.git
     GIT_TAG v2.4.2
@@ -50,7 +50,7 @@ fetchcontent_declare(
     EXCLUDE_FROM_ALL
     SYSTEM
 )
-fetchcontent_makeavailable(box2d)
+FetchContent_MakeAvailable(box2d)
 target_link_libraries(UniversalGravitySim PUBLIC box2d)
 
 install(TARGETS UniversalGravitySim DESTINATION bin)
