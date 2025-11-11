@@ -2,14 +2,13 @@
 
 #pragma once
 
-#include <box2d/box2d.h>
-
 #include <vector>
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Window/Window.hpp>
+#include <box2d/box2d.h>
 
 inline sf::Vector2f box2d_to_sfml(const b2Vec2& vec, float box_height) {
   return {vec.x * 30.f, box_height - vec.y * 30.f};
