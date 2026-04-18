@@ -12,7 +12,7 @@ class Planet : public Box2DBase {
  public:
   Planet(const sf::Vector2f& position, float radius, const sf::Color& color);
 
-  virtual ~Planet() = default;
+  ~Planet() override = default;
 
   Planet(Planet&&) = default;
   Planet& operator=(Planet&&) = default;

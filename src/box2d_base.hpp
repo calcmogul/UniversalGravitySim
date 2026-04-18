@@ -36,7 +36,7 @@ class Box2DBase : public sf::Drawable {
     draw_shape = sf_shape;
   }
 
-  virtual ~Box2DBase() {
+  ~Box2DBase() override {
     world.DestroyBody(body);
     clear_path();
   }
@@ -56,8 +56,9 @@ class Box2DBase : public sf::Drawable {
     }
   }
 
-  void draw(sf::RenderTarget& target,
-            sf::RenderStates states = sf::RenderStates::Default) const {
+  void draw(
+      sf::RenderTarget& target,
+      sf::RenderStates states = sf::RenderStates::Default) const override {
     // Draw object at current position
     target.draw(*draw_shape, states);
 

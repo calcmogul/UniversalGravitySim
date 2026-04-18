@@ -10,7 +10,7 @@ class Ship : public Box2DBase {
  public:
   Ship(const sf::Vector2f& position, float health);
 
-  virtual ~Ship() = default;
+  ~Ship() override = default;
 
   void control();
 
